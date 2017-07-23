@@ -1,3 +1,4 @@
+# Setup our php ini class
 class phpini (
 	$config,
 	$path = '/vagrant/extensions/phpini',
