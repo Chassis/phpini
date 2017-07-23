@@ -1,3 +1,4 @@
+# Setup our php ini class
 class phpini (
 	$config,
 	$path = '/vagrant/extensions/phpini',
@@ -25,7 +26,7 @@ class phpini (
 	exec { 'copy_ini':
 		path    => [ '/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/' ],
 		command => "cp /vagrant/content/custom.ini /etc/${php_dir}/fpm/conf.d/custom.ini",
-		onlyif  => "test -f /vagrant/content/custom.ini"
+		onlyif  => 'test -f /vagrant/content/custom.ini'
 	}
 
 	file { "/etc/${php_dir}/fpm/conf.d/custom.ini":
