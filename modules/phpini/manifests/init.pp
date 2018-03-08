@@ -3,6 +3,13 @@ class phpini (
 	$config,
 	$path = '/vagrant/extensions/phpini',
 ) {
+
+	if ( ! empty( $config[disabled_extensions] ) and 'chassis/phpini' in $config[disabled_extensions] ) {
+		$file = absent
+	} else {
+		$file = present
+	}
+
 	$version = $config[php]
 
 	if $version =~ /^(\d+)\.(\d+)$/ {
@@ -30,13 +37,13 @@ class phpini (
 	}
 
 	file { "/etc/${php_dir}/fpm/conf.d/custom.ini":
-		ensure  => 'present',
+		ensure  => $file,
 		content => template('phpini/custom.ini.erb'),
 		owner   => 'root',
 		group   => 'root',
 		mode    => '0644',
 		require => Package["${php_package}-fpm"],
 		notify  => Service["${php_package}-fpm"],
-		replace => false
+		replace => true
 	}
 }
