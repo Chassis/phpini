@@ -30,13 +30,23 @@ class phpini (
 		$php_dir = "php/${short_ver}"
 	}
 
-	exec { 'copy_ini':
+	exec { 'copy_fpm_ini':
 		path    => [ '/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/' ],
 		command => "cp /vagrant/content/custom.ini /etc/${php_dir}/fpm/conf.d/custom.ini",
 		onlyif  => 'test -f /vagrant/content/custom.ini'
 	}
 
-	file { "/etc/${php_dir}/fpm/conf.d/custom.ini":
+	exec { 'copy_cli_ini':
+		path    => [ '/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/' ],
+		command => "cp /vagrant/content/custom.ini /etc/${php_dir}/cli/conf.d/custom.ini",
+		onlyif  => 'test -f /vagrant/content/custom.ini'
+	}
+
+	file {
+			[
+					"/etc/${php_dir}/fpm/conf.d/custom.ini",
+					"/etc/${php_dir}/cli/conf.d/custom.ini"
+			]:
 		ensure  => $file,
 		content => template('phpini/custom.ini.erb'),
 		owner   => 'root',
