@@ -30,16 +30,18 @@ class phpini (
 		$php_dir = "php/${short_ver}"
 	}
 
+	$content_dir = $config[mapped_paths][content]
+
 	exec { 'copy_fpm_ini':
 		path    => [ '/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/' ],
-		command => "cp /vagrant/content/custom.ini /etc/${php_dir}/fpm/conf.d/custom.ini",
-		onlyif  => 'test -f /vagrant/content/custom.ini'
+		command => "cp ${content_dir}/custom.ini /etc/${php_dir}/fpm/conf.d/custom.ini",
+		onlyif  => "test -f ${content_dir}/custom.ini"
 	}
 
 	exec { 'copy_cli_ini':
 		path    => [ '/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/' ],
-		command => "cp /vagrant/content/custom.ini /etc/${php_dir}/cli/conf.d/custom.ini",
-		onlyif  => 'test -f /vagrant/content/custom.ini'
+		command => "cp ${content_dir}/custom.ini /etc/${php_dir}/cli/conf.d/custom.ini",
+		onlyif  => "test -f ${content_dir}/custom.ini"
 	}
 
 	file {
