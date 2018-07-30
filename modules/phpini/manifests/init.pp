@@ -34,28 +34,17 @@ class phpini (
 
 	exec { 'copy_fpm_ini':
 		path    => [ '/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/' ],
-		command => "cp ${content_dir}/custom.ini /etc/${php_dir}/fpm/conf.d/custom.ini",
-		onlyif  => "test -f ${content_dir}/custom.ini"
+		command => "cp -f ${content_dir}/custom.ini /etc/${php_dir}/fpm/conf.d/custom.ini",
+		onlyif  => "test -f ${content_dir}/custom.ini",
+		require => Package["${php_package}-fpm"],
+		notify  => Service["${php_package}-fpm"]
 	}
 
 	exec { 'copy_cli_ini':
 		path    => [ '/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/' ],
-		command => "cp ${content_dir}/custom.ini /etc/${php_dir}/cli/conf.d/custom.ini",
-		onlyif  => "test -f ${content_dir}/custom.ini"
-	}
-
-	file {
-			[
-					"/etc/${php_dir}/fpm/conf.d/custom.ini",
-					"/etc/${php_dir}/cli/conf.d/custom.ini"
-			]:
-		ensure  => $file,
-		content => template('phpini/custom.ini.erb'),
-		owner   => 'root',
-		group   => 'root',
-		mode    => '0644',
+		command => "cp -f ${content_dir}/custom.ini /etc/${php_dir}/cli/conf.d/custom.ini",
+		onlyif  => "test -f ${content_dir}/custom.ini",
 		require => Package["${php_package}-fpm"],
-		notify  => Service["${php_package}-fpm"],
-		replace => true
+		notify  => Service["${php_package}-fpm"]
 	}
 }
